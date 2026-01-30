@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Country model for geographic isolation
+model Country {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  code        String       @unique // IN, US
+  users       User[]
+  restaurants Restaurant[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+// User roles enum
+enum Role {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+// Order status enum
+enum OrderStatus {
+  DRAFT      // Items being added
+  PENDING    // Checkout initiated
+  CONFIRMED  // Payment successful
+  CANCELLED  // Order cancelled
+  DELIVERED  // Order delivered
+}
+
+// User model
+model User {
+  id             String          @id @default(cuid())
+  name           String
+  email          String          @unique
+  role           Role
+  country        Country         @relation(fields: [countryId], references: [id])
+  countryId      String
+  orders         Order[]
+  paymentMethods PaymentMethod[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+// Restaurant model
+model Restaurant {
+  id          String     @id @default(cuid())
+  name        String
+  description String
+  image       String
+  cuisine     String
+  rating      Float      @default(4.0)
+  country     Country    @relation(fields: [countryId], references: [id])
+  countryId   String
+  menuItems   MenuItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+// Menu items for restaurants
+model MenuItem {
+  id           String      @id @default(cuid())
+  name         String
+  description  String
+  price        Float
+  image        String
+  category     String
+  isVegetarian Boolean     @default(false)
+  isAvailable  Boolean     @default(true)
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+  orderItems   OrderItem[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+// Order model
+model Order {
+  id              String      @id @default(cuid())
+  user            User        @relation(fields: [userId], references: [id])
+  userId          String
+  status          OrderStatus @default(DRAFT)
+  total           Float       @default(0)
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId String?
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+// Order items
+model OrderItem {
+  id         String   @id @default(cuid())
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId    String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  menuItemId String
+  quantity   Int      @default(1)
+  price      Float    // Price at time of order
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// Payment methods
+model PaymentMethod {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  type      String   // CREDIT_CARD, DEBIT_CARD, UPI, etc.
+  lastFour  String   // Last 4 digits for display
+  isDefault Boolean  @default(false)
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

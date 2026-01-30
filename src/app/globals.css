@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Glass effect utility */
+.glass {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #0ea5e9, #d946ef);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Button styles */
+.btn-primary {
+  @apply px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl 
+         font-semibold shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 
+         transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed
+         disabled:hover:scale-100;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 bg-dark-700 text-white rounded-xl font-semibold border border-dark-600
+         hover:bg-dark-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-danger {
+  @apply px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl 
+         font-semibold shadow-lg shadow-red-500/25 hover:shadow-red-500/40 
+         transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Input styles */
+.input {
+  @apply w-full px-4 py-3 bg-dark-800 border border-dark-600 rounded-xl text-white
+         placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-primary-500
+         focus:border-transparent transition-all duration-200;
+}
+
+/* Badge styles */
+.badge {
+  @apply px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
+}
+
+.badge-admin {
+  @apply bg-gradient-to-r from-accent-500/20 to-accent-600/20 text-accent-400 border border-accent-500/30;
+}
+
+.badge-manager {
+  @apply bg-gradient-to-r from-primary-500/20 to-primary-600/20 text-primary-400 border border-primary-500/30;
+}
+
+.badge-member {
+  @apply bg-gradient-to-r from-green-500/20 to-green-600/20 text-green-400 border border-green-500/30;
+}
+
+/* Status badges */
+.status-draft {
+  @apply bg-dark-600 text-dark-300;
+}
+
+.status-pending {
+  @apply bg-yellow-500/20 text-yellow-400;
+}
+
+.status-confirmed {
+  @apply bg-green-500/20 text-green-400;
+}
+
+.status-cancelled {
+  @apply bg-red-500/20 text-red-400;
+}
+
+.status-delivered {
+  @apply bg-primary-500/20 text-primary-400;
+}
